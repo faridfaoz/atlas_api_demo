@@ -7,4 +7,5 @@ opencode-maas
 opencode-maas-env.ts
 OPENCODE.md
 .venv/
+__pycache__/
 atlas-streamlit-dashboard.md
