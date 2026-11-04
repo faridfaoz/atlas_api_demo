@@ -1,6 +1,9 @@
 # Apache Atlas API Demo
 
-A self-contained lab for learning and testing the **Apache Atlas 2.1.0** REST APIs. It runs Atlas (with its embedded HBase, ZooKeeper, Kafka, and Solr) in a single Docker container, then walks its v2 REST API end to end: register a custom metadata type, create and update a metadata entity, and verify Solr-indexed search.
+A self-contained lab for learning and testing the **Apache Atlas 2.1.0** REST APIs, in two parts:
+
+1. **Atlas API lab (Docker)** — runs Atlas (with its embedded HBase, ZooKeeper, Kafka, and Solr) in a single container, then walks its v2 REST API end to end: register a custom metadata type, create and update a metadata entity, and verify Solr-indexed search.
+2. **Streamlit dashboard** — a browser UI on port `8501` that visualizes and operates the same lab: server status, metadata search and inspection, typedef registration, and entity posting.
 
 ## What you end up with
 
@@ -8,6 +11,7 @@ A self-contained lab for learning and testing the **Apache Atlas 2.1.0** REST AP
 - A custom entity type (`my_custom_table`) registered via the Types API
 - A metadata entity created, updated, and searchable through the v2 API
 - Clean start/stop/restart behavior with persistent data and search index
+- A Streamlit dashboard (in a Python venv) on port `8501` driving the same APIs
 
 ## Architecture
 
@@ -49,6 +53,21 @@ The smoke test exercises five steps: health check (`GET /api/atlas/admin/status`
 
 Open the Web UI at http://localhost:21000 (admin/admin) to browse the results.
 
+## Part 2 — Dashboard
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install streamlit requests pandas
+streamlit run app.py --server.headless true
+```
+
+Open http://localhost:8501, or validate the dashboard end-to-end without a browser:
+
+```bash
+.venv/bin/python dashboard_test.py   # exercises every tab against the live lab
+./smoke_test.sh                      # restores the lab state afterwards
+```
+
 ## Files
 
 | File | Purpose |
@@ -59,12 +78,16 @@ Open the Web UI at http://localhost:21000 (admin/admin) to browse the results.
 | `entity.json` | Entity creation payload (`raw_zone.orders_raw@lab_cluster`) |
 | `entity-update.json` | Entity update payload (change owner) |
 | `smoke_test.sh` | Idempotent end-to-end API verification script |
-| `docker_atlas_setup.md` | Full runbook: setup from a fresh VM, API walkthrough, troubleshooting, and the defects found and fixed along the way |
+| `app.py` | Streamlit dashboard: status, search/inspect, typedef registration, entity posting |
+| `dashboard_test.py` | Automated end-to-end dashboard validation (Streamlit AppTest, no browser) |
+| `docker_atlas_setup.md` | Part 1 runbook: setup from a fresh VM, API walkthrough, troubleshooting, and the defects found and fixed along the way |
+| `atlas_dashboard_runbook.md` | Part 2 runbook: venv setup, dashboard launch, validation, and the defects found in the draft script |
 
 ## Notes
 
 - Atlas 2.1.0 has no v2 admin endpoints — health checks must use the v1 `GET /api/atlas/admin/status`, which returns `{"Status":"ACTIVE"}`.
 - The image ships busybox `wget`, so the container healthcheck uses `--user/--password` (the `-u` flag is unsupported).
 - `qualifiedName` is the unique attribute for entities; the smoke test uses it for idempotent lookups.
+- Basic search returns soft-deleted entities unless `excludeDeletedEntities=true` is passed; `?purge=true` is a no-op in Atlas 2.1.0.
 
-See [docker_atlas_setup.md](docker_atlas_setup.md) for the complete runbook, curl-by-curl API walkthrough, and troubleshooting guide.
+See [docker_atlas_setup.md](docker_atlas_setup.md) for the Part 1 runbook and [atlas_dashboard_runbook.md](atlas_dashboard_runbook.md) for the Part 2 runbook.

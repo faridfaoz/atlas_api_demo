@@ -6,3 +6,5 @@ opencode.json
 opencode-maas
 opencode-maas-env.ts
 OPENCODE.md
+.venv/
+atlas-streamlit-dashboard.md
