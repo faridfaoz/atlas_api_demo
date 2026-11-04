@@ -1,0 +1,12 @@
+{
+  "entity": {
+    "typeName": "my_custom_table",
+    "attributes": {
+      "name": "orders_raw",
+      "qualifiedName": "raw_zone.orders_raw@lab_cluster",
+      "description": "Raw ingestion table for retail orders",
+      "owner": "DataEngineeringTeam",
+      "data_tier": "Raw"
+    }
+  }
+}

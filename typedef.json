@@ -1,0 +1,24 @@
+{
+  "entityDefs": [
+    {
+      "name": "my_custom_table",
+      "superTypes": ["DataSet"],
+      "serviceType": "custom_lab",
+      "typeVersion": "1.0",
+      "attributeDefs": [
+        {
+          "name": "owner",
+          "typeName": "string",
+          "isOptional": true,
+          "cardinality": "SINGLE"
+        },
+        {
+          "name": "data_tier",
+          "typeName": "string",
+          "isOptional": true,
+          "cardinality": "SINGLE"
+        }
+      ]
+    }
+  ]
+}

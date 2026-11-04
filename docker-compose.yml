@@ -1,0 +1,35 @@
+services:
+  apache-atlas:
+    image: sburn/apache-atlas:2.1.0
+    container_name: apache-atlas-lab
+    environment:
+      MANAGE_LOCAL_HBASE: "true"
+      MANAGE_LOCAL_SOLR: "true"
+    ports:
+      - "21000:21000"
+    restart: unless-stopped
+    # Give atlas_stop.py time to stop Atlas/Solr/HBase/ZooKeeper cleanly
+    stop_grace_period: 2m
+    entrypoint: ["/bin/bash", "/atlas-lab/atlas-entrypoint.sh"]
+    command: []
+    volumes:
+      - atlas_data:/opt/apache-atlas-2.1.0/data
+      - atlas_logs:/opt/apache-atlas-2.1.0/logs
+      # Solr node home: keeps the Lucene indexes (vertex/edge/fulltext)
+      # across container recreation. Without this, 'down && up' wipes the
+      # indexes while HBase keeps the graph, breaking search silently.
+      - atlas_solr:/opt/apache-atlas-2.1.0/solr/server/solr
+      - ./atlas-entrypoint.sh:/atlas-lab/atlas-entrypoint.sh:ro
+    healthcheck:
+      # NOTE: Atlas 2.1.0 has no /api/atlas/v2/admin/* endpoints;
+      # admin endpoints are v1 only and return {"Status":"ACTIVE"}
+      test: ["CMD-SHELL", "wget -q -O /dev/null --user=admin --password=admin http://localhost:21000/api/atlas/admin/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10m
+
+volumes:
+  atlas_data:
+  atlas_logs:
+  atlas_solr:

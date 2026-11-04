@@ -1,0 +1,11 @@
+{
+  "entity": {
+    "guid": "9ed54ff0-94ac-4acf-b226-b0d1401213c9",
+    "typeName": "my_custom_table",
+    "attributes": {
+      "name": "orders_raw",
+      "qualifiedName": "raw_zone.orders_raw@lab_cluster",
+      "owner": "AnalyticsArchitectureTeam"
+    }
+  }
+}
