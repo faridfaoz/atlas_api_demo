@@ -82,6 +82,7 @@ Open http://localhost:8501, or validate the dashboard end-to-end without a brows
 | `dashboard_test.py` | Automated end-to-end dashboard validation (Streamlit AppTest, no browser) |
 | `docker_atlas_setup.md` | Part 1 runbook: setup from a fresh VM, API walkthrough, troubleshooting, and the defects found and fixed along the way |
 | `atlas_dashboard_runbook.md` | Part 2 runbook: venv setup, dashboard launch, validation, and the defects found in the draft script |
+| `atlas_concepts_guide.md` | Learning guide: core Atlas concepts (types, entities, classifications, lineage, glossary, search) with a validated API cookbook and 2.1.0 quirks |
 
 ## Notes
 
